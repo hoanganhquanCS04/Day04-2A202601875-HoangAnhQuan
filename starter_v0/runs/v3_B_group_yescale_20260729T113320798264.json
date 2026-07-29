@@ -1,0 +1,664 @@
+{
+  "run_id": "v3_B_group_yescale_20260729T113320798264",
+  "version": "v3",
+  "artifact_version": "v3+p30313fe07c5d+t2f8acacc59f0",
+  "prompt_hash": "30313fe07c5da0ad86f1db5c648ae2f18b3475547c35a560c28d41c99e8bcccd",
+  "tools_hash": "2f8acacc59f0d5550aede81ad5c87ebd28d29098a43aab775bf33cbb722a64f4",
+  "phase": "B",
+  "suite": "group",
+  "provider": "yescale",
+  "model": "gpt-4o-mini",
+  "system_prompt": "D:\\AI-Action\\DAY04_2A202601183_NguyenMinhHung\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "D:\\AI-Action\\DAY04_2A202601183_NguyenMinhHung\\starter_v0\\artifacts\\tools.yaml",
+  "eval_cases": "data\\eval_group.json",
+  "dataset_id": "day04_v2_research_group",
+  "dataset_role": "group",
+  "description": "10 case do nhóm 2A202601183 tự thiết kế: 5 single-turn (query) + 5 multi-turn (turns). Trọng tâm là 3 tool mới của nhóm (weather, currency, crypto) và các ranh giới mà eval_base chưa phủ: xác nhận trước khi gửi trên nội dung do tool mới sinh ra, câu hỏi năng lực không được gọi tool, và huỷ yêu cầu giữa chừng.",
+  "generated_at": "2026-07-29T11:33:20",
+  "summary": {
+    "total_cases": 10,
+    "measured_cases": 10,
+    "provider_error_cases": 0,
+    "passed_cases": 10,
+    "case_accuracy": 1.0,
+    "tool_routing_accuracy": 1.0,
+    "argument_accuracy": 1.0,
+    "multiturn_accuracy": 1.0,
+    "failure_counts": {},
+    "observed_mismatch_counts": {}
+  },
+  "results": [
+    {
+      "id": "G01_weather_routing",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "routing_new_tool_weather",
+        "difficulty": "easy",
+        "what_it_tests": "Routing sang TOOL MỚI weather thay vì lookup/web search khi hỏi thời tiết một địa điểm cụ thể."
+      },
+      "input": "Thời tiết ở Tokyo bây giờ thế nào?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "location": "Tokyo"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "location": "Tokyo"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "weather",
+          "args": {
+            "location": "Tokyo"
+          },
+          "result": {
+            "tool": "get_weather",
+            "location": "Shikinejima, Japan",
+            "unit": "metric",
+            "current": {
+              "temperature": 28.0,
+              "feels_like": 31.0,
+              "unit": "C",
+              "description": "Sunny",
+              "humidity": 77.0,
+              "wind_speed": 46.0,
+              "wind_unit": "km/h",
+              "observation_time": "04:09 AM"
+            },
+            "forecast": [],
+            "items": [
+              {
+                "title": "Thời tiết Shikinejima, Japan",
+                "url": "https://wttr.in/Tokyo",
+                "source": "wttr.in",
+                "summary": "Shikinejima, Japan: Sunny, 28.0°C (cảm giác 31.0°C), độ ẩm 77.0%."
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G02_currency_args",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "arg_currency_triplet",
+        "difficulty": "medium",
+        "what_it_tests": "Trích đủ 3 arg đúng hướng: amount=200, from_currency=USD, to_currency=VND (không đảo chiều from/to)."
+      },
+      "input": "200 USD đổi ra VND được bao nhiêu tiền?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "currency",
+            "args": {
+              "amount": 200,
+              "from_currency": "USD",
+              "to_currency": "VND"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "currency",
+            "args": {
+              "amount": 200,
+              "from_currency": "USD",
+              "to_currency": "VND"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "currency",
+          "args": {
+            "amount": 200,
+            "from_currency": "USD",
+            "to_currency": "VND"
+          },
+          "result": {
+            "tool": "convert_currency",
+            "amount": 200.0,
+            "from_currency": "USD",
+            "to_currency": "VND",
+            "rate": 26252.669608,
+            "converted": 5250533.9216,
+            "rate_date": "Wed, 29 Jul 2026 00:02:31 +0000",
+            "items": [
+              {
+                "title": "USD → VND",
+                "url": "https://www.exchangerate-api.com",
+                "source": "open.er-api.com",
+                "summary": "200 USD = 5,250,533.9216 VND (tỷ giá 1 USD = 26,252.6696 VND)"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G03_out_of_scope_creative",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "out_of_scope_creative_writing",
+        "difficulty": "easy",
+        "what_it_tests": "Yêu cầu sáng tác nằm ngoài phạm vi research → trả lời thẳng, KHÔNG gọi tool nào (kể cả lookup)."
+      },
+      "input": "Viết giúp mình một bài thơ lục bát về mùa thu Hà Nội.",
+      "expect": {
+        "no_tool": true,
+        "behavior": "refuse"
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "Mùa thu Hà Nội, lá vàng rơi,  \nGió nhẹ thổi qua, lòng thấy vui.  \nSương mờ giăng kín, phố phường xưa,  \nNhững chiếc lá bay, như mơ ước.\n\nCafé phố cổ, hương thơm ngát,  \nNgười đi qua lại, nụ cười tươi.  \nÁo dài thướt tha, bước nhẹ nhàng,  \nMùa thu Hà Nội, đẹp như tranh.  \n\nNhững buổi chiều tà, nắng vàng ấm,  \nHồ Gươm lấp lánh, nước trong veo.  \nTiếng chim hót vang, gọi bạn về,  \nMùa thu Hà Nội, tình yêu đong.",
+        "case_failure_type": "out_of_scope",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G04_capability_question_no_tool",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "capability_question_no_tool",
+        "difficulty": "medium",
+        "what_it_tests": "Hỏi về NĂNG LỰC của agent (có tra được không) chỉ cần trả lời, không được kích hoạt weather/crypto — bẫy unnecessary_tool sát với tool mới."
+      },
+      "input": "Bạn có tra được thời tiết và giá coin không vậy?",
+      "expect": {
+        "no_tool": true,
+        "behavior": "answer_without_tool"
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "Có, mình có thể tra cứu thời tiết hiện tại và giá tiền mã hóa. Bạn cần biết thời tiết ở đâu và giá của đồng coin nào?",
+        "case_failure_type": "unnecessary_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G05_confirm_before_send_crypto",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "confirm_before_write_pressure",
+        "difficulty": "hard",
+        "what_it_tests": "Có chữ 'ngay' tạo áp lực hành động, nhưng gửi ra ngoài vẫn phải xác nhận trước bằng clarify yes_no, không được gọi send."
+      },
+      "input": "Gửi ngay báo cáo giá coin hôm nay lên Telegram nhóm giúp mình.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "yes_no"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "Bạn xác nhận cho mình gửi báo cáo giá coin hôm nay lên Telegram nhóm chứ?",
+              "response_type": "yes_no"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "clarify",
+          "args": {
+            "question": "Bạn xác nhận cho mình gửi báo cáo giá coin hôm nay lên Telegram nhóm chứ?",
+            "response_type": "yes_no"
+          },
+          "result": {
+            "tool": "ask_user",
+            "question": "Bạn xác nhận cho mình gửi báo cáo giá coin hôm nay lên Telegram nhóm chứ?",
+            "response_type": "yes_no",
+            "options": [],
+            "awaiting_user": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "G06_clarify_then_location",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_clarify_then_fill_location",
+        "difficulty": "medium",
+        "what_it_tests": "Lượt 1 thiếu location (đáng lẽ clarify), lượt 2 bổ sung; lượt cuối phải gọi weather với location=Singapore chứ không hỏi lại nữa."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Cho mình xem thời tiết với"
+        },
+        {
+          "role": "user",
+          "content": "Ở Singapore nhé"
+        },
+        {
+          "role": "user",
+          "content": "Chỉ cần thời tiết hiện tại thôi, không cần dự báo"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "location": "Singapore"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "days": 0,
+              "location": "Singapore"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "weather",
+          "args": {
+            "days": 0,
+            "location": "Singapore"
+          },
+          "result": {
+            "tool": "get_weather",
+            "location": "Mount Emily Park, Singapore",
+            "unit": "metric",
+            "current": {
+              "temperature": 31.0,
+              "feels_like": 38.0,
+              "unit": "C",
+              "description": "Cloudy",
+              "humidity": 66.0,
+              "wind_speed": 18.0,
+              "wind_unit": "km/h",
+              "observation_time": "04:11 AM"
+            },
+            "forecast": [],
+            "items": [
+              {
+                "title": "Thời tiết Mount Emily Park, Singapore",
+                "url": "https://wttr.in/Singapore",
+                "source": "wttr.in",
+                "summary": "Mount Emily Park, Singapore: Cloudy, 31.0°C (cảm giác 38.0°C), độ ẩm 66.0%."
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G07_correction_currency",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_correction_arg",
+        "difficulty": "hard",
+        "what_it_tests": "Sửa from_currency USD→EUR ở lượt 2 nhưng vẫn giữ amount=500 và to_currency=VND."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "500 USD ra VND là bao nhiêu?"
+        },
+        {
+          "role": "user",
+          "content": "À nhầm, 500 EUR chứ không phải USD"
+        },
+        {
+          "role": "user",
+          "content": "Vẫn quy đổi sang VND nhé"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "currency",
+            "args": {
+              "amount": 500,
+              "from_currency": "EUR",
+              "to_currency": "VND"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "currency",
+            "args": {
+              "amount": 500,
+              "from_currency": "EUR",
+              "to_currency": "VND"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "currency",
+          "args": {
+            "amount": 500,
+            "from_currency": "EUR",
+            "to_currency": "VND"
+          },
+          "result": {
+            "tool": "convert_currency",
+            "amount": 500.0,
+            "from_currency": "EUR",
+            "to_currency": "VND",
+            "rate": 29884.637627,
+            "converted": 14942318.8135,
+            "rate_date": "Wed, 29 Jul 2026 00:02:31 +0000",
+            "items": [
+              {
+                "title": "EUR → VND",
+                "url": "https://www.exchangerate-api.com",
+                "source": "open.er-api.com",
+                "summary": "500 EUR = 14,942,318.8135 VND (tỷ giá 1 EUR = 29,884.6376 VND)"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G08_carryover_crypto_currency",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_carryover_coin",
+        "difficulty": "hard",
+        "what_it_tests": "Carry coin=bitcoin từ lượt 1, đổi vs_currency sang vnd theo lượt 2; không được nhảy sang tool currency vì Bitcoin không phải tiền pháp định."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Giá Bitcoin bây giờ bao nhiêu?"
+        },
+        {
+          "role": "user",
+          "content": "Quy ra tiền Việt giúp mình"
+        },
+        {
+          "role": "user",
+          "content": "Vẫn là Bitcoin nhé, đừng đổi sang coin khác"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "crypto",
+            "args": {
+              "coin": "bitcoin",
+              "vs_currency": "vnd"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "crypto",
+            "args": {
+              "coin": "bitcoin",
+              "vs_currency": "vnd"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "crypto",
+          "args": {
+            "coin": "bitcoin",
+            "vs_currency": "vnd"
+          },
+          "result": {
+            "tool": "get_crypto_price",
+            "coin": "bitcoin",
+            "vs_currency": "vnd",
+            "price": 1678793248.0,
+            "change_24h_pct": 0.91,
+            "market_cap": 33677533038393136,
+            "items": [
+              {
+                "title": "BITCOIN / VND",
+                "url": "https://www.coingecko.com/en/coins/bitcoin",
+                "source": "coingecko.com",
+                "summary": "bitcoin = 1,678,793,248.0000 VND, 24h +0.91%"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G09_switch_crypto_to_news",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_switch_tool",
+        "difficulty": "hard",
+        "what_it_tests": "Chuyển tool giữa các lượt: crypto → lookup, đồng thời set topic=news và timeframe=week từ lượt cuối."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Giá Ethereum hôm nay thế nào?"
+        },
+        {
+          "role": "user",
+          "content": "Thôi, cho mình xem tin tức về Ethereum trên web đi"
+        },
+        {
+          "role": "user",
+          "content": "Tin trong tuần này nhé"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "Ethereum",
+              "topic": "news",
+              "timeframe": "week"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "topic": "news",
+              "max_results": 5,
+              "query": "Ethereum",
+              "timeframe": "week"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "topic": "news",
+            "max_results": 5,
+            "query": "Ethereum",
+            "timeframe": "week"
+          },
+          "result": {
+            "tool": "web_search",
+            "error": "RuntimeError",
+            "message": "Missing TAVILY_API_KEY env var"
+          }
+        }
+      ]
+    },
+    {
+      "id": "G10_cancel_midway",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_cancel_request",
+        "difficulty": "hard",
+        "what_it_tests": "Người dùng huỷ yêu cầu ở lượt cuối → agent phải dừng, xác nhận đã huỷ và KHÔNG gọi social_search dù lượt 1 đã yêu cầu."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tìm giúp mình tweet mọi người nói gì về Nvidia"
+        },
+        {
+          "role": "user",
+          "content": "Khoan đã"
+        },
+        {
+          "role": "user",
+          "content": "Thôi bỏ đi, mình không cần tìm nữa, cảm ơn bạn nhé"
+        }
+      ],
+      "expect": {
+        "no_tool": true,
+        "behavior": "answer_without_tool"
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "Đã xác nhận yêu cầu của bạn. Nếu cần gì thêm, hãy cho mình biết nhé!",
+        "case_failure_type": "unnecessary_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    }
+  ]
+}

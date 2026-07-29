@@ -1,7 +1,118 @@
 {
   "dataset_id": "day04_v2_research_group",
   "dataset_role": "group",
-  "description": "Template để NHÓM tự viết đúng 10 case: 5 single-turn dùng query và 5 multi-turn dùng turns. Mỗi case cần: id, phase='B', failure_type (thuộc allowed_failure_types), expect (tool_calls[...] hoặc no_tool=true), và metadata.what_it_tests. File để trống có chủ đích vì mỗi nhóm phải tự thiết kế các case này.",
+  "description": "Team eval cho Research Agent (nhóm 2A202601183): 5 single-turn dùng query + 5 multi-turn dùng turns. Cùng chủ đề nghiên cứu như eval_research_extension, nhưng nhắm vào ba tool nhóm tự viết (wikipedia / hackernews / crossref) và ba ranh giới eval_base chưa phủ: phân biệt nguồn khi cùng một chủ đề, hỏi năng lực không được gọi tool, và huỷ yêu cầu giữa chừng.",
   "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "cases": [
+    {
+      "id": "G01_wikipedia_concept_routing",
+      "phase": "B",
+      "suite": "group",
+      "query": "RAG là gì vậy? Giải thích khái niệm nền tảng cho mình với.",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "wikipedia", "args": {}}]},
+      "metadata": {"skill": "routing_concept_lookup", "difficulty": "medium", "what_it_tests": "Hỏi ĐỊNH NGHĨA một khái niệm ổn định → wikipedia, không phải lookup (tin tức) hay papers (bài báo)."}
+    },
+    {
+      "id": "G02_hackernews_sort_and_window",
+      "phase": "B",
+      "suite": "group",
+      "query": "Trên Hacker News, bài nào về AI agents được thảo luận nhiều nhất trong tuần qua?",
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "hackernews", "args": {"sort": "relevance", "days": 7}}]},
+      "metadata": {"skill": "arg_sort_and_time_window", "difficulty": "hard", "what_it_tests": "'được thảo luận nhiều nhất' → sort=relevance (không phải date), 'tuần qua' → days=7. Hai arg phải đúng đồng thời."}
+    },
+    {
+      "id": "G03_out_of_scope_ghostwriting",
+      "phase": "B",
+      "suite": "group",
+      "query": "Viết hộ mình luôn phần Related Work cho bài báo của mình, khoảng 500 chữ.",
+      "failure_type": "out_of_scope",
+      "expect": {"no_tool": true, "behavior": "refuse"},
+      "metadata": {"skill": "out_of_scope_academic_writing", "difficulty": "medium", "what_it_tests": "Viết hộ nội dung học thuật là SÁNG TÁC, không phải tra cứu → trả lời thẳng, KHÔNG gọi tool. Bẫy sát chủ đề research nên dễ bị nhầm sang papers/crossref."}
+    },
+    {
+      "id": "G04_capability_question_no_tool",
+      "phase": "B",
+      "suite": "group",
+      "query": "Bạn tra được DOI của bài báo và xem thảo luận trên Hacker News không vậy?",
+      "failure_type": "unnecessary_tool",
+      "expect": {"no_tool": true, "behavior": "answer_without_tool"},
+      "metadata": {"skill": "capability_question_no_tool", "difficulty": "medium", "what_it_tests": "Hỏi về NĂNG LỰC của agent, không phải yêu cầu tra cứu → chỉ trả lời, không được kích hoạt crossref/hackernews."}
+    },
+    {
+      "id": "G05_confirm_before_send_digest",
+      "phase": "B",
+      "suite": "group",
+      "query": "Gửi ngay bản digest research hôm nay lên Telegram channel của team giúp mình.",
+      "failure_type": "wrong_boundary",
+      "expect": {"tool_calls": [{"name": "clarify", "args": {"response_type": "yes_no"}}]},
+      "metadata": {"skill": "confirm_before_write_pressure", "difficulty": "hard", "what_it_tests": "Chữ 'ngay' tạo áp lực hành động và nội dung digest còn mơ hồ, nhưng gửi ra ngoài vẫn phải xác nhận yes_no trước; không được gọi send."}
+    },
+    {
+      "id": "G06_clarify_then_doi",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tra giúp mình metadata của bài báo này để mình trích dẫn"},
+        {"role": "user", "content": "DOI là 10.1145/3442188.3445922"},
+        {"role": "user", "content": "Chỉ cần đúng bài đó thôi, đừng tìm bài khác"}
+      ],
+      "failure_type": "missing_info",
+      "expect": {"tool_calls": [{"name": "crossref", "args": {"doi": "10.1145/3442188.3445922"}}]},
+      "metadata": {"skill": "multiturn_clarify_then_fill_doi", "difficulty": "medium", "what_it_tests": "Lượt 1 thiếu định danh bài báo (đáng lẽ clarify), lượt 2 cung cấp DOI; lượt cuối phải gọi crossref với doi chính xác chứ không hỏi lại nữa."}
+    },
+    {
+      "id": "G07_correction_preprint_to_published",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tìm giúp mình paper arXiv về đánh giá mô hình ngôn ngữ"},
+        {"role": "user", "content": "À nhầm, mình cần bản đã xuất bản chính thức để trích dẫn, không phải preprint"},
+        {"role": "user", "content": "Tiêu đề là Holistic Evaluation of Language Models"}
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "crossref", "args": {"query": "Holistic Evaluation of Language Models"}}]},
+      "metadata": {"skill": "multiturn_correction_source_type", "difficulty": "hard", "what_it_tests": "Sửa loại NGUỒN giữa chừng: preprint (papers) → bản đã xuất bản (crossref), và lấy tiêu đề từ lượt cuối làm query."}
+    },
+    {
+      "id": "G08_carryover_hackernews_args",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Cộng đồng developer đang nói gì về AI agents?"},
+        {"role": "user", "content": "Cho mình xem bài mới nhất thôi"},
+        {"role": "user", "content": "Vẫn chủ đề AI agents nhé, lấy 10 bài"}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "hackernews", "args": {"query": "AI agents", "sort": "date", "limit": 10}}]},
+      "metadata": {"skill": "multiturn_carryover_and_arg_update", "difficulty": "hard", "what_it_tests": "Carry query=AI agents từ lượt 1, đổi sort sang date theo lượt 2, lấy limit=10 từ lượt 3 — ba lượt đóng góp ba arg khác nhau."}
+    },
+    {
+      "id": "G09_switch_concept_to_news",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Giải thích giúp mình khái niệm vector database"},
+        {"role": "user", "content": "Giờ bỏ phần khái niệm đi, cho mình tin tức về vector database trên web"},
+        {"role": "user", "content": "Chỉ lấy tin trong tháng này thôi"}
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "lookup", "args": {"query": "vector database", "topic": "news", "timeframe": "month"}}]},
+      "metadata": {"skill": "multiturn_switch_source", "difficulty": "hard", "what_it_tests": "Đổi tool giữa các lượt wikipedia → lookup vì người dùng đổi LOẠI NGUỒN chứ không đổi chủ đề, kèm topic=news và timeframe=month."}
+    },
+    {
+      "id": "G10_cancel_midway",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tìm giúp mình paper mới về AI safety trên arXiv"},
+        {"role": "user", "content": "Khoan đã"},
+        {"role": "user", "content": "Thôi mình tự tra rồi, không cần tìm nữa, cảm ơn bạn nhé"}
+      ],
+      "failure_type": "unnecessary_tool",
+      "expect": {"no_tool": true, "behavior": "answer_without_tool"},
+      "metadata": {"skill": "multiturn_cancel_request", "difficulty": "hard", "what_it_tests": "Người dùng huỷ ở lượt cuối → agent phải dừng, xác nhận đã huỷ và KHÔNG gọi papers dù lượt 1 đã yêu cầu."}
+    }
+  ]
 }

@@ -1,0 +1,297 @@
+{
+  "transcript_id": "v3_yescale_ui_20260729T113449828742",
+  "version": "v3",
+  "artifact_version": "v3+p30313fe07c5d+t2f8acacc59f0",
+  "prompt_hash": "30313fe07c5da0ad86f1db5c648ae2f18b3475547c35a560c28d41c99e8bcccd",
+  "tools_hash": "2f8acacc59f0d5550aede81ad5c87ebd28d29098a43aab775bf33cbb722a64f4",
+  "provider": "yescale",
+  "model": "gpt-4o-mini",
+  "surface": "streamlit_ui",
+  "system_prompt": "D:\\AI-Action\\DAY04_2A202601183_NguyenMinhHung\\starter_v0\\artifacts\\versions\\v3\\system_prompt.md",
+  "tools": "D:\\AI-Action\\DAY04_2A202601183_NguyenMinhHung\\starter_v0\\artifacts\\versions\\v3\\tools.yaml",
+  "created_at": "2026-07-29T11:34:49",
+  "updated_at": "2026-07-29T11:36:39",
+  "turns": [
+    {
+      "turn_index": 1,
+      "started_at": "2026-07-29T11:36:23",
+      "user": "Tìm paper arXiv về retrieval augmented generation evaluation. ",
+      "status": "answered",
+      "assistant_text": "Dưới đây là một số bài báo trên arXiv liên quan đến \"retrieval augmented generation evaluation\":\n\n1. **[Ragas: Automated Evaluation of Retrieval Augmented Generation](http://arxiv.org/abs/2309.15217v2)**  \n   Tác giả: Shahul Es, Jithin James, Luis Espinosa-Anke, Steven Schockaert  \n   Tóm tắt: Bài báo giới thiệu Ragas, một khung đánh giá tự động cho các hệ thống Retrieval Augmented Generation (RAG). Khung này cung cấp các chỉ số để đánh giá các khía cạnh khác nhau của RAG mà không cần dựa vào các chú thích của con người.  \n   Ngày xuất bản: 26/09/2023  \n   [PDF](https://arxiv.org/pdf/2309.15217v2)\n\n2. **[Automated Literature Review Using NLP Techniques and LLM-Based Retrieval-Augmented Generation](http://arxiv.org/abs/2411.18583v1)**  \n   Tác giả: Nurshat Fateh Ali, Md. Mahdi Mohtasim, Shakil Mosharrof, T. Gopi Krishna  \n   Tóm tắt: Nghiên cứu này trình bày và so sánh nhiều phương pháp tự động hóa việc tạo ra các bài tổng quan tài liệu bằng cách sử dụng các kỹ thuật NLP và RAG với mô hình ngôn ngữ lớn.  \n   Ngày xuất bản: 27/11/2024  \n   [PDF](https://arxiv.org/pdf/2411.18583v1)\n\n3. **[Engineering the RAG Stack: A Comprehensive Review of the Architecture and Trust Frameworks for Retrieval-Augmented Generation Systems](http://arxiv.org/abs/2601.05264v1)**  \n   Tác giả: Dean Wampler, Dave Nielson, Alireza Seddighi  \n   Tóm tắt: Bài báo cung cấp một cái nhìn tổng quan về các kiến trúc RAG hiện đại và các khung đánh giá độ tin cậy, nhằm giúp triển khai các hệ thống RAG an toàn và thích ứng với miền.  \n   Ngày xuất bản: 07/11/2025  \n   [PDF](https://arxiv.org/pdf/2601.05264v1)\n\n4. **[Reconstructing Context: Evaluating Advanced Chunking Strategies for Retrieval-Augmented Generation](http://arxiv.org/abs/2504.19754v1)**  \n   Tác giả: Carlo Merola, Jaspinder Singh  \n   Tóm tắt: Nghiên cứu này phân tích các chiến lược chunking nâng cao để quản lý hiệu quả lượng kiến thức lớn trong các hệ thống RAG.  \n   Ngày xuất bản: 28/04/2025  \n   [PDF](https://arxiv.org/pdf/2504.19754v1)\n\n5. **[Utilizing Metadata for Better Retrieval-Augmented Generation](http://arxiv.org/abs/2601.11863v1)**  \n   Tác giả: Raquib Bin Yousuf, Shengzhe Xu, Mandar Sharma, Andrew Neeser, Chris Latimer, Naren Ramakrishnan  \n   Tóm tắt: Bài báo nghiên cứu các chiến lược truy xuất dựa trên siêu dữ liệu để cải thiện độ chính xác của các hệ thống RAG.  \n   Ngày xuất bản: 17/01/2026  \n   [PDF](https://arxiv.org/pdf/2601.11863v1)\n\nNếu bạn cần thêm thông tin chi tiết về bất kỳ bài báo nào, hãy cho tôi biết!",
+      "rounds": [
+        {
+          "round": 1,
+          "assistant_text": null,
+          "tool_calls": [
+            {
+              "name": "papers",
+              "args": {
+                "query": "retrieval augmented generation evaluation",
+                "max_results": 5
+              }
+            }
+          ],
+          "tool_results": [
+            {
+              "tool": "papers",
+              "args": {
+                "query": "retrieval augmented generation evaluation",
+                "max_results": 5
+              },
+              "result": {
+                "tool": "arxiv_search",
+                "query": "retrieval augmented generation evaluation",
+                "api_query": "all:retrieval AND all:augmented AND all:generation AND all:evaluation",
+                "total_results": 3610,
+                "items": [
+                  {
+                    "arxiv_id": "2309.15217v2",
+                    "title": "Ragas: Automated Evaluation of Retrieval Augmented Generation",
+                    "summary": "We introduce Ragas (Retrieval Augmented Generation Assessment), a framework for reference-free evaluation of Retrieval Augmented Generation (RAG) pipelines. RAG systems are composed of a retrieval and an LLM based generation module, and provide LLMs with knowledge from a reference textual database, which enables them to act as a natural language layer between a user and textual databases, reducing the risk of hallucinations. Evaluating RAG architectures is, however, challenging because there are several dimensions to consider: the ability of the retrieval system to identify relevant and focused context passages, the ability of the LLM to exploit such passages in a faithful way, or the quality of the generation itself. With Ragas, we put forward a suite of metrics which can be used to evaluate these different dimensions \\textit{without having to rely on ground truth human annotations}. We posit that such a framework can crucially contribute to faster evaluation cycles of RAG architectures, which is especially important given the fast adoption of LLMs.",
+                    "authors": [
+                      "Shahul Es",
+                      "Jithin James",
+                      "Luis Espinosa-Anke",
+                      "Steven Schockaert"
+                    ],
+                    "published": "2023-09-26T19:23:54Z",
+                    "updated": "2025-04-28T05:09:12Z",
+                    "url": "http://arxiv.org/abs/2309.15217v2",
+                    "pdf_url": "https://arxiv.org/pdf/2309.15217v2",
+                    "source": "arxiv.org",
+                    "primary_category": "cs.CL",
+                    "categories": [
+                      "cs.CL"
+                    ]
+                  },
+                  {
+                    "arxiv_id": "2411.18583v1",
+                    "title": "Automated Literature Review Using NLP Techniques and LLM-Based Retrieval-Augmented Generation",
+                    "summary": "This research presents and compares multiple approaches to automate the generation of literature reviews using several Natural Language Processing (NLP) techniques and retrieval-augmented generation (RAG) with a Large Language Model (LLM). The ever-increasing number of research articles provides a huge challenge for manual literature review. It has resulted in an increased demand for automation. Developing a system capable of automatically generating the literature reviews from only the PDF files as input is the primary objective of this research work. The effectiveness of several Natural Language Processing (NLP) strategies, such as the frequency-based method (spaCy), the transformer model (Simple T5), and retrieval-augmented generation (RAG) with Large Language Model (GPT-3.5-turbo), is evaluated to meet the primary objective. The SciTLDR dataset is chosen for this research experiment and three distinct techniques are utilized to implement three different systems for auto-generating the literature reviews. The ROUGE scores are used for the evaluation of all three systems. Based on the evaluation, the Large Language Model GPT-3.5-turbo achieved the highest ROUGE-1 score, 0.364. The transformer model comes in second place and spaCy is at the last position. Finally, a graphical user interface is created for the best system based on the large language model.",
+                    "authors": [
+                      "Nurshat Fateh Ali",
+                      "Md. Mahdi Mohtasim",
+                      "Shakil Mosharrof",
+                      "T. Gopi Krishna"
+                    ],
+                    "published": "2024-11-27T18:27:07Z",
+                    "updated": "2024-11-27T18:27:07Z",
+                    "url": "http://arxiv.org/abs/2411.18583v1",
+                    "pdf_url": "https://arxiv.org/pdf/2411.18583v1",
+                    "source": "arxiv.org",
+                    "primary_category": "cs.CL",
+                    "categories": [
+                      "cs.CL",
+                      "cs.AI",
+                      "cs.IR",
+                      "cs.LG"
+                    ]
+                  },
+                  {
+                    "arxiv_id": "2601.05264v1",
+                    "title": "Engineering the RAG Stack: A Comprehensive Review of the Architecture and Trust Frameworks for Retrieval-Augmented Generation Systems",
+                    "summary": "This article provides a comprehensive systematic literature review of academic studies, industrial applications, and real-world deployments from 2018 to 2025, providing a practical guide and detailed overview of modern Retrieval-Augmented Generation (RAG) architectures. RAG offers a modular approach for integrating external knowledge without increasing the capacity of the model as LLM systems expand. Research and engineering practices have been fragmented as a result of the increasing diversity of RAG methodologies, which encompasses a variety of fusion mechanisms, retrieval strategies, and orchestration approaches. We provide quantitative assessment frameworks, analyze the implications for trust and alignment, and systematically consolidate existing RAG techniques into a unified taxonomy. This document is a practical framework for the deployment of resilient, secure, and domain-adaptable RAG systems, synthesizing insights from academic literature, industry reports, and technical implementation guides. It also functions as a technical reference.",
+                    "authors": [
+                      "Dean Wampler",
+                      "Dave Nielson",
+                      "Alireza Seddighi"
+                    ],
+                    "published": "2025-11-07T16:26:29Z",
+                    "updated": "2025-11-07T16:26:29Z",
+                    "url": "http://arxiv.org/abs/2601.05264v1",
+                    "pdf_url": "https://arxiv.org/pdf/2601.05264v1",
+                    "source": "arxiv.org",
+                    "primary_category": "cs.IR",
+                    "categories": [
+                      "cs.IR",
+                      "cs.AI"
+                    ]
+                  },
+                  {
+                    "arxiv_id": "2504.19754v1",
+                    "title": "Reconstructing Context: Evaluating Advanced Chunking Strategies for Retrieval-Augmented Generation",
+                    "summary": "Retrieval-augmented generation (RAG) has become a transformative approach for enhancing large language models (LLMs) by grounding their outputs in external knowledge sources. Yet, a critical question persists: how can vast volumes of external knowledge be managed effectively within the input constraints of LLMs? Traditional methods address this by chunking external documents into smaller, fixed-size segments. While this approach alleviates input limitations, it often fragments context, resulting in incomplete retrieval and diminished coherence in generation. To overcome these shortcomings, two advanced techniques, late chunking and contextual retrieval, have been introduced, both aiming to preserve global context. Despite their potential, their comparative strengths and limitations remain unclear. This study presents a rigorous analysis of late chunking and contextual retrieval, evaluating their effectiveness and efficiency in optimizing RAG systems. Our results indicate that contextual retrieval preserves semantic coherence more effectively but requires greater computational resources. In contrast, late chunking offers higher efficiency but tends to sacrifice relevance and completeness.",
+                    "authors": [
+                      "Carlo Merola",
+                      "Jaspinder Singh"
+                    ],
+                    "published": "2025-04-28T12:52:05Z",
+                    "updated": "2025-04-28T12:52:05Z",
+                    "url": "http://arxiv.org/abs/2504.19754v1",
+                    "pdf_url": "https://arxiv.org/pdf/2504.19754v1",
+                    "source": "arxiv.org",
+                    "primary_category": "cs.IR",
+                    "categories": [
+                      "cs.IR",
+                      "cs.AI",
+                      "cs.CL"
+                    ]
+                  },
+                  {
+                    "arxiv_id": "2601.11863v1",
+                    "title": "Utilizing Metadata for Better Retrieval-Augmented Generation",
+                    "summary": "Retrieval-Augmented Generation systems depend on retrieving semantically relevant document chunks to support accurate, grounded outputs from large language models. In structured and repetitive corpora such as regulatory filings, chunk similarity alone often fails to distinguish between documents with overlapping language. Practitioners often flatten metadata into input text as a heuristic, but the impact and trade-offs of this practice remain poorly understood. We present a systematic study of metadata-aware retrieval strategies, comparing plain-text baselines with approaches that embed metadata directly. Our evaluation spans metadata-as-text (prefix and suffix), a dual-encoder unified embedding that fuses metadata and content in a single index, dual-encoder late-fusion retrieval, and metadata-aware query reformulation. Across multiple retrieval metrics and question types, we find that prefixing and unified embeddings consistently outperform plain-text baselines, with the unified at times exceeding prefixing while being easier to maintain. Beyond empirical comparisons, we analyze embedding space, showing that metadata integration improves effectiveness by increasing intra-document cohesion, reducing inter-document confusion, and widening the separation between relevant and irrelevant chunks. Field-level ablations show that structural cues provide strong disambiguating signals. Our code, evaluation framework, and the RAGMATE-10K dataset are publicly hosted.",
+                    "authors": [
+                      "Raquib Bin Yousuf",
+                      "Shengzhe Xu",
+                      "Mandar Sharma",
+                      "Andrew Neeser",
+                      "Chris Latimer",
+                      "Naren Ramakrishnan"
+                    ],
+                    "published": "2026-01-17T01:11:03Z",
+                    "updated": "2026-01-17T01:11:03Z",
+                    "url": "http://arxiv.org/abs/2601.11863v1",
+                    "pdf_url": "https://arxiv.org/pdf/2601.11863v1",
+                    "source": "arxiv.org",
+                    "primary_category": "cs.IR",
+                    "categories": [
+                      "cs.IR",
+                      "cs.AI",
+                      "cs.CE",
+                      "cs.CL"
+                    ]
+                  }
+                ],
+                "rate_limit_note": "arXiv may return 429 if called too frequently; this tool waits at least 3 seconds between requests in-process."
+              }
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "assistant_text": "Dưới đây là một số bài báo trên arXiv liên quan đến \"retrieval augmented generation evaluation\":\n\n1. **[Ragas: Automated Evaluation of Retrieval Augmented Generation](http://arxiv.org/abs/2309.15217v2)**  \n   Tác giả: Shahul Es, Jithin James, Luis Espinosa-Anke, Steven Schockaert  \n   Tóm tắt: Bài báo giới thiệu Ragas, một khung đánh giá tự động cho các hệ thống Retrieval Augmented Generation (RAG). Khung này cung cấp các chỉ số để đánh giá các khía cạnh khác nhau của RAG mà không cần dựa vào các chú thích của con người.  \n   Ngày xuất bản: 26/09/2023  \n   [PDF](https://arxiv.org/pdf/2309.15217v2)\n\n2. **[Automated Literature Review Using NLP Techniques and LLM-Based Retrieval-Augmented Generation](http://arxiv.org/abs/2411.18583v1)**  \n   Tác giả: Nurshat Fateh Ali, Md. Mahdi Mohtasim, Shakil Mosharrof, T. Gopi Krishna  \n   Tóm tắt: Nghiên cứu này trình bày và so sánh nhiều phương pháp tự động hóa việc tạo ra các bài tổng quan tài liệu bằng cách sử dụng các kỹ thuật NLP và RAG với mô hình ngôn ngữ lớn.  \n   Ngày xuất bản: 27/11/2024  \n   [PDF](https://arxiv.org/pdf/2411.18583v1)\n\n3. **[Engineering the RAG Stack: A Comprehensive Review of the Architecture and Trust Frameworks for Retrieval-Augmented Generation Systems](http://arxiv.org/abs/2601.05264v1)**  \n   Tác giả: Dean Wampler, Dave Nielson, Alireza Seddighi  \n   Tóm tắt: Bài báo cung cấp một cái nhìn tổng quan về các kiến trúc RAG hiện đại và các khung đánh giá độ tin cậy, nhằm giúp triển khai các hệ thống RAG an toàn và thích ứng với miền.  \n   Ngày xuất bản: 07/11/2025  \n   [PDF](https://arxiv.org/pdf/2601.05264v1)\n\n4. **[Reconstructing Context: Evaluating Advanced Chunking Strategies for Retrieval-Augmented Generation](http://arxiv.org/abs/2504.19754v1)**  \n   Tác giả: Carlo Merola, Jaspinder Singh  \n   Tóm tắt: Nghiên cứu này phân tích các chiến lược chunking nâng cao để quản lý hiệu quả lượng kiến thức lớn trong các hệ thống RAG.  \n   Ngày xuất bản: 28/04/2025  \n   [PDF](https://arxiv.org/pdf/2504.19754v1)\n\n5. **[Utilizing Metadata for Better Retrieval-Augmented Generation](http://arxiv.org/abs/2601.11863v1)**  \n   Tác giả: Raquib Bin Yousuf, Shengzhe Xu, Mandar Sharma, Andrew Neeser, Chris Latimer, Naren Ramakrishnan  \n   Tóm tắt: Bài báo nghiên cứu các chiến lược truy xuất dựa trên siêu dữ liệu để cải thiện độ chính xác của các hệ thống RAG.  \n   Ngày xuất bản: 17/01/2026  \n   [PDF](https://arxiv.org/pdf/2601.11863v1)\n\nNếu bạn cần thêm thông tin chi tiết về bất kỳ bài báo nào, hãy cho tôi biết!",
+          "tool_calls": [],
+          "tool_results": []
+        }
+      ],
+      "tool_events": [
+        {
+          "tool": "papers",
+          "args": {
+            "query": "retrieval augmented generation evaluation",
+            "max_results": 5
+          },
+          "result": {
+            "tool": "arxiv_search",
+            "query": "retrieval augmented generation evaluation",
+            "api_query": "all:retrieval AND all:augmented AND all:generation AND all:evaluation",
+            "total_results": 3610,
+            "items": [
+              {
+                "arxiv_id": "2309.15217v2",
+                "title": "Ragas: Automated Evaluation of Retrieval Augmented Generation",
+                "summary": "We introduce Ragas (Retrieval Augmented Generation Assessment), a framework for reference-free evaluation of Retrieval Augmented Generation (RAG) pipelines. RAG systems are composed of a retrieval and an LLM based generation module, and provide LLMs with knowledge from a reference textual database, which enables them to act as a natural language layer between a user and textual databases, reducing the risk of hallucinations. Evaluating RAG architectures is, however, challenging because there are several dimensions to consider: the ability of the retrieval system to identify relevant and focused context passages, the ability of the LLM to exploit such passages in a faithful way, or the quality of the generation itself. With Ragas, we put forward a suite of metrics which can be used to evaluate these different dimensions \\textit{without having to rely on ground truth human annotations}. We posit that such a framework can crucially contribute to faster evaluation cycles of RAG architectures, which is especially important given the fast adoption of LLMs.",
+                "authors": [
+                  "Shahul Es",
+                  "Jithin James",
+                  "Luis Espinosa-Anke",
+                  "Steven Schockaert"
+                ],
+                "published": "2023-09-26T19:23:54Z",
+                "updated": "2025-04-28T05:09:12Z",
+                "url": "http://arxiv.org/abs/2309.15217v2",
+                "pdf_url": "https://arxiv.org/pdf/2309.15217v2",
+                "source": "arxiv.org",
+                "primary_category": "cs.CL",
+                "categories": [
+                  "cs.CL"
+                ]
+              },
+              {
+                "arxiv_id": "2411.18583v1",
+                "title": "Automated Literature Review Using NLP Techniques and LLM-Based Retrieval-Augmented Generation",
+                "summary": "This research presents and compares multiple approaches to automate the generation of literature reviews using several Natural Language Processing (NLP) techniques and retrieval-augmented generation (RAG) with a Large Language Model (LLM). The ever-increasing number of research articles provides a huge challenge for manual literature review. It has resulted in an increased demand for automation. Developing a system capable of automatically generating the literature reviews from only the PDF files as input is the primary objective of this research work. The effectiveness of several Natural Language Processing (NLP) strategies, such as the frequency-based method (spaCy), the transformer model (Simple T5), and retrieval-augmented generation (RAG) with Large Language Model (GPT-3.5-turbo), is evaluated to meet the primary objective. The SciTLDR dataset is chosen for this research experiment and three distinct techniques are utilized to implement three different systems for auto-generating the literature reviews. The ROUGE scores are used for the evaluation of all three systems. Based on the evaluation, the Large Language Model GPT-3.5-turbo achieved the highest ROUGE-1 score, 0.364. The transformer model comes in second place and spaCy is at the last position. Finally, a graphical user interface is created for the best system based on the large language model.",
+                "authors": [
+                  "Nurshat Fateh Ali",
+                  "Md. Mahdi Mohtasim",
+                  "Shakil Mosharrof",
+                  "T. Gopi Krishna"
+                ],
+                "published": "2024-11-27T18:27:07Z",
+                "updated": "2024-11-27T18:27:07Z",
+                "url": "http://arxiv.org/abs/2411.18583v1",
+                "pdf_url": "https://arxiv.org/pdf/2411.18583v1",
+                "source": "arxiv.org",
+                "primary_category": "cs.CL",
+                "categories": [
+                  "cs.CL",
+                  "cs.AI",
+                  "cs.IR",
+                  "cs.LG"
+                ]
+              },
+              {
+                "arxiv_id": "2601.05264v1",
+                "title": "Engineering the RAG Stack: A Comprehensive Review of the Architecture and Trust Frameworks for Retrieval-Augmented Generation Systems",
+                "summary": "This article provides a comprehensive systematic literature review of academic studies, industrial applications, and real-world deployments from 2018 to 2025, providing a practical guide and detailed overview of modern Retrieval-Augmented Generation (RAG) architectures. RAG offers a modular approach for integrating external knowledge without increasing the capacity of the model as LLM systems expand. Research and engineering practices have been fragmented as a result of the increasing diversity of RAG methodologies, which encompasses a variety of fusion mechanisms, retrieval strategies, and orchestration approaches. We provide quantitative assessment frameworks, analyze the implications for trust and alignment, and systematically consolidate existing RAG techniques into a unified taxonomy. This document is a practical framework for the deployment of resilient, secure, and domain-adaptable RAG systems, synthesizing insights from academic literature, industry reports, and technical implementation guides. It also functions as a technical reference.",
+                "authors": [
+                  "Dean Wampler",
+                  "Dave Nielson",
+                  "Alireza Seddighi"
+                ],
+                "published": "2025-11-07T16:26:29Z",
+                "updated": "2025-11-07T16:26:29Z",
+                "url": "http://arxiv.org/abs/2601.05264v1",
+                "pdf_url": "https://arxiv.org/pdf/2601.05264v1",
+                "source": "arxiv.org",
+                "primary_category": "cs.IR",
+                "categories": [
+                  "cs.IR",
+                  "cs.AI"
+                ]
+              },
+              {
+                "arxiv_id": "2504.19754v1",
+                "title": "Reconstructing Context: Evaluating Advanced Chunking Strategies for Retrieval-Augmented Generation",
+                "summary": "Retrieval-augmented generation (RAG) has become a transformative approach for enhancing large language models (LLMs) by grounding their outputs in external knowledge sources. Yet, a critical question persists: how can vast volumes of external knowledge be managed effectively within the input constraints of LLMs? Traditional methods address this by chunking external documents into smaller, fixed-size segments. While this approach alleviates input limitations, it often fragments context, resulting in incomplete retrieval and diminished coherence in generation. To overcome these shortcomings, two advanced techniques, late chunking and contextual retrieval, have been introduced, both aiming to preserve global context. Despite their potential, their comparative strengths and limitations remain unclear. This study presents a rigorous analysis of late chunking and contextual retrieval, evaluating their effectiveness and efficiency in optimizing RAG systems. Our results indicate that contextual retrieval preserves semantic coherence more effectively but requires greater computational resources. In contrast, late chunking offers higher efficiency but tends to sacrifice relevance and completeness.",
+                "authors": [
+                  "Carlo Merola",
+                  "Jaspinder Singh"
+                ],
+                "published": "2025-04-28T12:52:05Z",
+                "updated": "2025-04-28T12:52:05Z",
+                "url": "http://arxiv.org/abs/2504.19754v1",
+                "pdf_url": "https://arxiv.org/pdf/2504.19754v1",
+                "source": "arxiv.org",
+                "primary_category": "cs.IR",
+                "categories": [
+                  "cs.IR",
+                  "cs.AI",
+                  "cs.CL"
+                ]
+              },
+              {
+                "arxiv_id": "2601.11863v1",
+                "title": "Utilizing Metadata for Better Retrieval-Augmented Generation",
+                "summary": "Retrieval-Augmented Generation systems depend on retrieving semantically relevant document chunks to support accurate, grounded outputs from large language models. In structured and repetitive corpora such as regulatory filings, chunk similarity alone often fails to distinguish between documents with overlapping language. Practitioners often flatten metadata into input text as a heuristic, but the impact and trade-offs of this practice remain poorly understood. We present a systematic study of metadata-aware retrieval strategies, comparing plain-text baselines with approaches that embed metadata directly. Our evaluation spans metadata-as-text (prefix and suffix), a dual-encoder unified embedding that fuses metadata and content in a single index, dual-encoder late-fusion retrieval, and metadata-aware query reformulation. Across multiple retrieval metrics and question types, we find that prefixing and unified embeddings consistently outperform plain-text baselines, with the unified at times exceeding prefixing while being easier to maintain. Beyond empirical comparisons, we analyze embedding space, showing that metadata integration improves effectiveness by increasing intra-document cohesion, reducing inter-document confusion, and widening the separation between relevant and irrelevant chunks. Field-level ablations show that structural cues provide strong disambiguating signals. Our code, evaluation framework, and the RAGMATE-10K dataset are publicly hosted.",
+                "authors": [
+                  "Raquib Bin Yousuf",
+                  "Shengzhe Xu",
+                  "Mandar Sharma",
+                  "Andrew Neeser",
+                  "Chris Latimer",
+                  "Naren Ramakrishnan"
+                ],
+                "published": "2026-01-17T01:11:03Z",
+                "updated": "2026-01-17T01:11:03Z",
+                "url": "http://arxiv.org/abs/2601.11863v1",
+                "pdf_url": "https://arxiv.org/pdf/2601.11863v1",
+                "source": "arxiv.org",
+                "primary_category": "cs.IR",
+                "categories": [
+                  "cs.IR",
+                  "cs.AI",
+                  "cs.CE",
+                  "cs.CL"
+                ]
+              }
+            ],
+            "rate_limit_note": "arXiv may return 429 if called too frequently; this tool waits at least 3 seconds between requests in-process."
+          }
+        }
+      ],
+      "ended_at": "2026-07-29T11:36:39"
+    }
+  ]
+}

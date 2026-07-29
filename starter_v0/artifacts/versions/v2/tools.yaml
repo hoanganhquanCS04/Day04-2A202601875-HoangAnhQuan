@@ -1,0 +1,189 @@
+# Research Agent — tool declarations (v2)
+# Hypothesis v2: v1 sửa system prompt nhưng mô tả tool vẫn mơ hồ, nên model vẫn
+# nhầm timeline <-> social_search và bỏ qua quy ước arg. v2 đưa luật routing +
+# quy ước arg vào ngay trong description/enum của từng tool.
+#
+# Nếu đổi tên tool, phải sync: file này -> tools/__init__.py (TOOL_FUNCTIONS)
+#   -> data/eval_base.json + data/eval_research_extension.json + data/eval_group.json
+tools:
+  # ---------------- Core tools ----------------
+  - name: clarify
+    description: >-
+      HỎI LẠI người dùng. Dùng trong ĐÚNG hai tình huống:
+      (1) request thiếu thông tin bắt buộc (không biết tweet của AI, không có URL,
+      không rõ chủ đề) -> response_type="text";
+      (2) trước khi thực hiện hành động ghi/gửi ra ngoài (send/đăng/publish) -> response_type="yes_no".
+      TUYỆT ĐỐI không đoán bừa giá trị còn thiếu; hãy gọi tool này thay vì đoán.
+      KHÔNG dùng cho câu hỏi ngoài phạm vi hay câu hỏi về chính agent (trả lời thẳng, không gọi tool).
+    parameters:
+      type: object
+      properties:
+        question: {type: string, default: "", description: "Câu hỏi nêu đúng thông tin đang thiếu hoặc câu xác nhận yes/no."}
+        response_type: {type: string, enum: [text, yes_no, choice], default: "text", description: "text = xin thông tin; yes_no = xác nhận hành động; choice = chọn trong options."}
+        options: {type: array, default: [], items: {type: string}, description: "Danh sách lựa chọn, chỉ dùng khi response_type=choice."}
+      required: [question]
+
+  - name: timeline
+    description: >-
+      Lấy các bài đăng gần đây CỦA MỘT TÀI KHOẢN Twitter/X CỤ THỂ.
+      Dùng khi câu hỏi nhắc tới một người/tổ chức xác định ("tweet của Sam Altman",
+      "Elon Musk đăng gì"). KHÔNG dùng để tìm theo chủ đề — đó là social_search.
+      Nếu không biết là tài khoản nào thì gọi clarify, không được tự chọn một người nổi tiếng.
+    parameters:
+      type: object
+      properties:
+        screenname: {type: string, default: "", description: "Twitter handle KHÔNG có @ (sama, elonmusk, karpathy, ylecun, OpenAI). Phải là handle, không phải tên đầy đủ."}
+        limit: {type: integer, default: 5, description: "Số tweet cần lấy; lấy đúng con số người dùng nêu (\"10 tweet\" -> 10)."}
+      required: [screenname]
+
+  - name: social_search
+    description: >-
+      Tìm bài đăng Twitter/X THEO CHỦ ĐỀ hoặc TỪ KHOÁ, không giới hạn tài khoản nào.
+      Dùng khi câu hỏi kiểu "mọi người đang nói gì về X", "tweet về X".
+      KHÔNG dùng khi đã biết rõ tài khoản cần xem — đó là timeline.
+    parameters:
+      type: object
+      properties:
+        query: {type: string, default: "", description: "Chủ đề/từ khoá thuần, ví dụ \"GPT-5\", \"OpenAI\"."}
+        search_type: {type: string, enum: [Latest, Top], default: "Latest", description: "Top khi người dùng nói phổ biến/nổi bật/top/được quan tâm nhất; Latest khi muốn mới nhất."}
+        limit: {type: integer, default: 5, description: "Số tweet cần lấy."}
+      required: [query]
+
+  - name: lookup
+    description: >-
+      Tìm kiếm trên WEB (Tavily) khi CHƯA có link cụ thể: tin tức, sự kiện, thông tin chung.
+      Dùng cho "tin AI hôm nay", "tin công nghệ tuần này".
+      KHÔNG dùng khi người dùng đã đưa sẵn URL — đó là fetch.
+    parameters:
+      type: object
+      properties:
+        query: {type: string, default: "", description: "CHỦ ĐỀ thuần, bỏ các từ thừa như \"tin tức\", \"hôm nay\", \"có gì nổi bật\". Ví dụ \"Tin tức AI hôm nay có gì?\" -> \"AI\"."}
+        topic: {type: string, enum: [general, news], default: "general", description: "news cho tin thời sự/tin tức; general cho kiến thức chung."}
+        timeframe: {type: string, enum: [day, week, month, year], default: "week", description: "hôm nay/mới nhất -> day; tuần này -> week; tháng này -> month; năm nay -> year."}
+        max_results: {type: integer, default: 5, description: "Số kết quả."}
+      required: [query]
+
+  - name: fetch
+    description: >-
+      Đọc nội dung của MỘT URL ĐÃ BIẾT (Firecrawl) và trả về text để tóm tắt.
+      Chỉ dùng khi URL đã xuất hiện trong hội thoại. Không bao giờ tự nghĩ ra URL:
+      nếu người dùng nói "bài này" mà chưa đưa link thì gọi clarify để xin link.
+    parameters:
+      type: object
+      properties:
+        url: {type: string, default: "", description: "URL đầy đủ, sao chép nguyên văn từ người dùng."}
+      required: [url]
+
+  - name: format
+    description: >-
+      Trình bày danh sách item ĐÃ CÓ SẴN thành digest markdown.
+      Chỉ gọi SAU khi đã thu thập được items từ tool khác (lookup/fetch/timeline/social_search).
+      Không phải tool tìm kiếm; không gọi khi chưa có dữ liệu.
+    parameters:
+      type: object
+      properties:
+        items:
+          type: array
+          default: []
+          description: "Danh sách item lấy từ kết quả tool trước đó."
+          items:
+            type: object
+            properties:
+              title: {type: string}
+              url: {type: string}
+              source: {type: string}
+              summary: {type: string}
+              section: {type: string}
+        template: {type: string, enum: [brief, sections, bullets, thread, daily_ai_vn], default: "sections", description: "Kiểu trình bày digest."}
+        headline: {type: string, default: "", description: "Tiêu đề digest."}
+      required: [items, template]
+
+  # ---------------- Bonus tools ----------------
+  - name: send
+    description: >-
+      GỬI văn bản lên Telegram. Đây là HÀNH ĐỘNG GHI RA NGOÀI, không thể hoàn tác.
+      BẮT BUỘC: phải được người dùng xác nhận rõ ràng bằng một lượt clarify
+      (response_type="yes_no") TRƯỚC ĐÓ. Ở lượt người dùng mới yêu cầu gửi lần đầu,
+      hãy gọi clarify chứ KHÔNG gọi tool này. Chỉ đặt confirmed=true khi người dùng đã đồng ý.
+    parameters:
+      type: object
+      properties:
+        text: {type: string, default: "", description: "Nội dung sẽ gửi."}
+        confirmed: {type: boolean, default: false, description: "Chỉ true khi người dùng đã xác nhận đồng ý gửi ở lượt trước."}
+      required: [text]
+
+  - name: policy
+    description: >-
+      Tra cứu QUY ĐỊNH NỘI BỘ của công ty trong kho markdown offline
+      (AI research, trích dẫn nguồn, quyền riêng tư dữ liệu, xuất bản ra ngoài, cách dùng tool).
+      Dùng khi câu hỏi nói tới "quy định/chính sách công ty"; không dùng cho thông tin ngoài internet.
+    parameters:
+      type: object
+      properties:
+        query: {type: string, default: "", description: "Nội dung cần tra trong policy."}
+        policy_area: {type: string, enum: [all, ai_research, source_citation, data_privacy, external_publishing, tool_usage], default: "all", description: "Giới hạn theo nhóm policy nếu biết rõ."}
+        top_k: {type: integer, default: 3, description: "Số đoạn trả về."}
+      required: [query]
+
+  - name: papers
+    description: >-
+      Tìm BÀI BÁO KHOA HỌC trên arXiv theo từ khoá. Dùng cho "paper về ...",
+      "nghiên cứu mới về ...". Không dùng cho tin tức phổ thông — đó là lookup.
+    parameters:
+      type: object
+      properties:
+        query: {type: string, default: "", description: "Từ khoá học thuật."}
+        max_results: {type: integer, default: 5, description: "Số paper."}
+        sort_by: {type: string, enum: [relevance, lastUpdatedDate, submittedDate], default: "relevance", description: "submittedDate/lastUpdatedDate khi người dùng muốn paper mới nhất."}
+      required: [query]
+
+  - name: paper_text
+    description: >-
+      Tải PDF của MỘT paper arXiv ĐÃ BIẾT ID/URL và trích text.
+      Chỉ dùng khi đã có arXiv id hoặc link; muốn tìm paper trước thì dùng papers.
+    parameters:
+      type: object
+      properties:
+        arxiv_url: {type: string, default: "", description: "arXiv id (2401.12345) hoặc URL đầy đủ."}
+        max_pages: {type: integer, default: 5, description: "Số trang PDF đọc tối đa."}
+        max_chars: {type: integer, default: 8000, description: "Số ký tự trả về tối đa."}
+      required: [arxiv_url]
+
+  # ---------------- Team tools (Phase 4, do nhóm tự viết) ----------------
+  - name: weather
+    description: >-
+      Tra THỜI TIẾT hiện tại (và dự báo ngắn 1-3 ngày) của một địa điểm qua wttr.in.
+      Dùng khi câu hỏi nhắc tới thời tiết/nhiệt độ/mưa nắng ở một nơi cụ thể.
+      Không dùng cho tin tức thời sự về khí hậu — đó là lookup.
+    parameters:
+      type: object
+      properties:
+        location: {type: string, default: "", description: "Tên thành phố/địa danh, ví dụ \"Hanoi\", \"Ho Chi Minh City\", \"Tokyo\". Thiếu thì gọi clarify."}
+        unit: {type: string, enum: [metric, imperial], default: "metric", description: "metric = °C/km-h (mặc định ở VN); imperial = °F/mph."}
+        days: {type: integer, default: 0, description: "0 = chỉ thời tiết hiện tại; 1-3 = kèm bấy nhiêu ngày dự báo (\"3 ngày tới\" -> 3)."}
+      required: [location]
+
+  - name: currency
+    description: >-
+      QUY ĐỔI TIỀN TỆ theo tỷ giá hôm nay (open.er-api.com).
+      Dùng khi câu hỏi kiểu "100 USD bằng bao nhiêu VND", "tỷ giá EUR sang JPY".
+      Chỉ dành cho tiền pháp định; giá tiền mã hoá (BTC/ETH) dùng crypto.
+    parameters:
+      type: object
+      properties:
+        amount: {type: number, default: 1, description: "Số tiền cần đổi; không nêu thì để 1 (hỏi tỷ giá)."}
+        from_currency: {type: string, default: "", description: "Mã ISO-4217 3 ký tự viết hoa của tiền gốc, ví dụ USD."}
+        to_currency: {type: string, default: "", description: "Mã ISO-4217 3 ký tự viết hoa của tiền đích, ví dụ VND."}
+      required: [from_currency, to_currency]
+
+  - name: crypto
+    description: >-
+      Lấy GIÁ TIỀN MÃ HOÁ hiện tại + biến động 24h qua CoinGecko.
+      Dùng cho "giá Bitcoin bây giờ", "ETH bao nhiêu USD".
+      Không dùng cho tiền pháp định (USD/VND/EUR) — đó là currency.
+    parameters:
+      type: object
+      properties:
+        coin: {type: string, default: "", description: "CoinGecko id viết thường: bitcoin, ethereum, solana, dogecoin. Ticker (BTC, ETH) cũng chấp nhận nhưng hãy ưu tiên id đầy đủ."}
+        vs_currency: {type: string, default: "usd", description: "Đơn vị quy giá viết thường: usd (mặc định), vnd, eur."}
+      required: [coin]

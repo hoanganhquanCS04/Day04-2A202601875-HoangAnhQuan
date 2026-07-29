@@ -18,6 +18,19 @@ from .social_search.tool import search_tweets
 from .send.tool import send_telegram
 from .lookup.tool import web_search
 
+# Tools written by this team (Phase 4). No API key required.
+# Active generation (declared from v5 on): research-oriented sources.
+from .wikipedia.tool import search_wikipedia
+from .hackernews.tool import search_hackernews
+from .crossref.tool import search_crossref
+
+# First generation (declared in v0..v4). Superseded by the three above because
+# they had no research use, but kept importable so those frozen artifact
+# snapshots still load and every v0..v4 eval stays reproducible.
+from .weather.tool import get_weather
+from .currency.tool import convert_currency
+from .crypto.tool import get_crypto_price
+
 
 # NOTE (starter_v0): tool names here are intentionally vague. These keys are the
 # names the model sees AND the names data/eval_base.json + data/eval_research_extension.json
@@ -35,7 +48,21 @@ TOOL_FUNCTIONS = {
     "policy": search_company_policy,
     "papers": arxiv_search,
     "paper_text": get_arxiv_paper_text,
+    # --- team-written tools, active generation (v5+) ---
+    "wikipedia": search_wikipedia,
+    "hackernews": search_hackernews,
+    "crossref": search_crossref,
+    # --- team-written tools, first generation (declared in v0..v4 only) ---
+    "weather": get_weather,
+    "currency": convert_currency,
+    "crypto": get_crypto_price,
 }
+
+# Names the model actually sees come from artifacts/tools.yaml, not from this
+# dict. TOOL_FUNCTIONS is the superset of everything implemented, so a frozen
+# snapshot from any version can still be loaded and re-run.
+TEAM_TOOLS_ACTIVE = ("wikipedia", "hackernews", "crossref")
+TEAM_TOOLS_LEGACY = ("weather", "currency", "crypto")
 
 
 def load_tool_declarations(path: Path) -> list[dict[str, Any]]:
